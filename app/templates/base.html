@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Gastos{% endblock %} — Fintrack</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            body: ['DM Sans', 'sans-serif'],
+          },
+          colors: {
+            ink: {
+              950: '#0a0e1a',
+              900: '#0f1523',
+              800: '#161d30',
+              700: '#1e2740',
+            },
+            lime: {
+              400: '#c8f135',
+              500: '#b5e020',
+            },
+            slate: {
+              muted: '#8892aa',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    h1, h2, h3, .font-display { font-family: 'Syne', sans-serif; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0f1523; }
+    ::-webkit-scrollbar-thumb { background: #1e2740; border-radius: 4px; }
+    .nav-link { transition: all 0.2s; }
+    .nav-link:hover, .nav-link.active {
+      background: rgba(200,241,53,0.08);
+      color: #c8f135;
+    }
+    .nav-link.active .nav-icon { color: #c8f135; }
+    .card { background: #161d30; border: 1px solid rgba(255,255,255,0.06); }
+    .btn-primary {
+      background: #c8f135;
+      color: #0a0e1a;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #b5e020; transform: translateY(-1px); }
+    .input-field {
+      background: #1e2740;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #e2e8f0;
+      transition: border-color 0.2s;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #c8f135;
+      box-shadow: 0 0 0 3px rgba(200,241,53,0.12);
+    }
+    .input-field::placeholder { color: #8892aa; }
+    select.input-field option { background: #1e2740; }
+    [x-cloak] { display: none !important; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.4s ease forwards; }
+  </style>
+</head>
+<body class="bg-ink-950 text-slate-200 min-h-screen">
+
+{% if current_user.is_authenticated %}
+<!-- Layout com sidebar -->
+<div class="flex min-h-screen" x-data="{ sidebarOpen: false }">
+
+  <!-- Overlay mobile -->
+  <div x-show="sidebarOpen" x-cloak
+       @click="sidebarOpen = false"
+       class="fixed inset-0 bg-black/60 z-20 lg:hidden"></div>
+
+  <!-- Sidebar -->
+  <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+         class="fixed lg:static lg:translate-x-0 inset-y-0 left-0 w-64 bg-ink-900 border-r border-white/5 z-30 flex flex-col transition-transform duration-300">
+
+    <!-- Logo -->
+    <div class="px-6 py-7 border-b border-white/5">
+      <span class="font-display text-2xl font-800 tracking-tight">
+        Fin<span class="text-lime-400">track</span>
+      </span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 px-3 py-5 space-y-1">
+      <a href="{{ url_for('dashboard.index') }}"
+         class="nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium">
+        <span class="nav-icon text-lg">⊞</span> Dashboard
+      </a>
+      <a href="{{ url_for('expenses.list') }}"
+         class="nav-link {% if 'expenses' in request.endpoint %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium">
+        <span class="nav-icon text-lg">↕</span> Gastos
+      </a>
+      <a href="{{ url_for('expenses.new') }}"
+         class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium">
+        <span class="nav-icon text-lg">＋</span> Novo gasto
+      </a>
+    </nav>
+
+    <!-- User -->
+    <div class="px-4 py-5 border-t border-white/5">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-lime-400/20 flex items-center justify-center text-lime-400 font-display font-bold text-sm">
+          {{ current_user.name[0].upper() }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-slate-200 truncate">{{ current_user.name }}</p>
+          <a href="{{ url_for('auth.logout') }}" class="text-xs text-slate-500 hover:text-lime-400 transition-colors">Sair</a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Conteúdo -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Topbar mobile -->
+    <header class="lg:hidden flex items-center justify-between px-5 py-4 border-b border-white/5 bg-ink-900">
+      <span class="font-display font-bold text-lg">Fin<span class="text-lime-400">track</span></span>
+      <button @click="sidebarOpen = !sidebarOpen" class="text-slate-400 hover:text-white p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="px-6 pt-5 space-y-2">
+          {% for category, message in messages %}
+            <div x-data="{ show: true }" x-show="show" x-cloak
+                 class="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium
+                   {% if category == 'success' %}bg-lime-400/10 text-lime-400 border border-lime-400/20
+                   {% elif category == 'danger' %}bg-red-500/10 text-red-400 border border-red-500/20
+                   {% else %}bg-blue-500/10 text-blue-400 border border-blue-500/20{% endif %}">
+              <span>{{ message }}</span>
+              <button @click="show = false" class="ml-3 opacity-60 hover:opacity-100">✕</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="flex-1 p-6 lg:p-8 fade-up">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+{% else %}
+<!-- Layout sem sidebar (auth) -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="fixed top-4 right-4 z-50 space-y-2 w-80">
+      {% for category, message in messages %}
+        <div x-data="{ show: true }" x-show="show" x-cloak
+             class="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium shadow-xl
+               {% if category == 'success' %}bg-lime-400/10 text-lime-400 border border-lime-400/20
+               {% elif category == 'danger' %}bg-red-500/10 text-red-400 border border-red-500/20
+               {% else %}bg-blue-500/10 text-blue-400 border border-blue-500/20{% endif %}">
+          <span>{{ message }}</span>
+          <button @click="show = false" class="ml-3 opacity-60 hover:opacity-100">✕</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<main class="fade-up">
+  {% block content %}{% endblock %}
+</main>
+{% endif %}
+
+</body>
+</html>
