@@ -6,13 +6,14 @@ app = create_app()
 def seed_categories():
     if Category.query.count() == 0:
         categories = [
-            Category(name='Alimentação'), # type: ignore
-            Category(name='Transporte'), # type: ignore
-            Category(name='Saúde'), # type: ignore
-            Category(name='Lazer'), # type: ignore
-            Category(name='Moradia'), # type: ignore
-            Category(name='Educação'), # type: ignore
-            Category(name='Outros') # type: ignore
+            Category(name='Alimentação', icon='🍔'), # type: ignore
+            Category(name='Transporte', icon='🚗'), # type: ignore
+            Category(name='Saúde', icon='💊'), # type: ignore
+            Category(name='Lazer', icon='🎬'), # type: ignore
+            Category(name='Moradia', icon='🏠'), # type: ignore
+            Category(name='Educação', icon='📚'), # type: ignore
+            Category(name='Vestuário', icon='👕'), # type: ignore
+            Category(name='Outros', icon='📦') # type: ignore
         ]
         db.session.add_all(categories)
         db.session.commit()

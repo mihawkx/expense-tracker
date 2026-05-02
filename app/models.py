@@ -26,6 +26,7 @@ class Category(db.Model):
     __tablename__ = 'categories'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
+    icon = db.Column(db.String(10), default="💰")
     expenses = db.relationship('Expense', backref='category', lazy=True)
 
 class Expense(db.Model):
@@ -33,7 +34,7 @@ class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(255), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.Date, nullable=False, default=datetime.now(timezone.utc))
+    date = db.Column(db.Date, nullable=False, default=lambda: datetime.now(timezone.utc))
     notes = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)

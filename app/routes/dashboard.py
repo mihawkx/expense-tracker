@@ -24,13 +24,14 @@ def index():
     # Total por categoria no mês
     by_category = db.session.query(
         Category.name,
+        Category.icon,
         func.sum(Expense.amount).label('total')
     ).join(Expense)\
     .filter(
         Expense.user_id == current_user.id,
         extract('month', Expense.date) == month,
         extract('year', Expense.date) == year
-    ).group_by(Category.name).all()
+    ).group_by(Category.name, Category.icon).all()
 
     # Últimos 5 gastos
     recent = Expense.query.filter_by(user_id=current_user.id)\

@@ -4,6 +4,7 @@ from app import db
 from app.models import Expense, Category
 from datetime import datetime
 
+
 expenses_bp = Blueprint('expenses', __name__)
 
 @expenses_bp.route('/')
@@ -31,8 +32,7 @@ def new():
         flash('Despesa adicionada com sucesso!', 'success')
         return redirect(url_for('expenses.list'))
     
-    return render_template('expenses/new.html', categories=categories, expense=None)
-
+    return render_template("expenses/form.html", categories=categories, expense=None, now=datetime.utcnow())
 @expenses_bp.route('/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit(id):
@@ -47,7 +47,7 @@ def edit(id):
         flash('Despesa atualizada com sucesso!', 'success')
         return redirect(url_for('expenses.list'))
     
-    return render_template('expenses/new.html', categories=categories, expense=expense)
+    return render_template("expenses/form.html", categories=categories, expense=expense, now=datetime.utcnow())
 
 @expenses_bp.route('/<int:id>/delete', methods=['POST'])
 @login_required

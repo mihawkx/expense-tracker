@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="flex min-h-screen" x-data="{ sidebarOpen: false }">
+
+  <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
+       class="fixed inset-0 bg-black/60 z-20 lg:hidden"></div>
+
+  <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+         class="fixed lg:static lg:translate-x-0 inset-y-0 left-0 w-64 bg-ink-900 border-r border-white/5 z-30 flex flex-col transition-transform duration-300">
+    <div class="px-6 py-7 border-b border-white/5">
+      <span class="font-display text-2xl font-bold">Fin<span class="text-lime-400">track</span></span>
+    </div>
+    <nav class="flex-1 px-3 py-5 space-y-1">
+      <a href="{{ url_for('dashboard.index') }}"
+         class="nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium">
+        <span class="nav-icon text-lg">⊞</span> Dashboard
+      </a>
+      <a href="{{ url_for('expenses.list') }}"
+         class="nav-link {% if request.endpoint and 'expenses' in request.endpoint %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium">
+        <span class="nav-icon text-lg">↕</span> Gastos
+      </a>
+      <a href="{{ url_for('expenses.new') }}"
+         class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium">
+        <span class="nav-icon text-lg">＋</span> Novo gasto
+      </a>
+    </nav>
+    <div class="px-4 py-5 border-t border-white/5">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-lime-400/20 flex items-center justify-center text-lime-400 font-display font-bold text-sm">
+          {{ current_user.name[0].upper() }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-slate-200 truncate">{{ current_user.name }}</p>
+          <a href="{{ url_for('auth.logout') }}" class="text-xs text-slate-500 hover:text-lime-400 transition-colors">Sair</a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="flex-1 flex flex-col min-w-0">
+    <header class="lg:hidden flex items-center justify-between px-5 py-4 border-b border-white/5 bg-ink-900">
+      <span class="font-display font-bold text-lg">Fin<span class="text-lime-400">track</span></span>
+      <button @click="sidebarOpen = !sidebarOpen" class="text-slate-400 hover:text-white p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="px-6 pt-5 space-y-2">
+          {% for category, message in messages %}
+            <div x-data="{ show: true }" x-show="show" x-cloak
+                 class="flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium
+                   {% if category == 'success' %}bg-lime-400/10 text-lime-400 border border-lime-400/20
+                   {% elif category == 'danger' %}bg-red-500/10 text-red-400 border border-red-500/20
+                   {% else %}bg-blue-500/10 text-blue-400 border border-blue-500/20{% endif %}">
+              <span>{{ message }}</span>
+              <button @click="show = false" class="ml-3 opacity-60 hover:opacity-100">✕</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="flex-1 p-6 lg:p-8 fade-up">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+{% endblock %}
