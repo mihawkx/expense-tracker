@@ -42,6 +42,7 @@ def edit(id):
         expense.description = request.form.get('description')
         expense.amount = request.form.get('amount')
         expense.date = datetime.strptime(request.form.get('date'), '%Y-%m-%d') # type: ignore
+        expense.notes = request.form.get('notes')
         expense.category_id = request.form.get('category_id')
         db.session.commit()
         flash('Despesa atualizada com sucesso!', 'success')
