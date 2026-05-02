@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from config import Config
+from flask import redirect, url_for
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -25,5 +26,9 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(expenses_bp, url_prefix='/expenses')
     app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
+
+    @app.route('/')
+    def home():
+        return redirect(url_for('auth.login'))
 
     return app
