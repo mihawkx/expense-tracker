@@ -27,7 +27,7 @@
 
   <!-- Lista -->
   {% if expenses %}
-  <div class="card rounded-2xl overflow-hidden">
+  <div class="card rounded-2xl overflow-visible">
     <!-- Cabeçalho tabela (desktop) -->
     <div class="hidden sm:grid grid-cols-12 px-5 py-3 border-b border-white/5 text-xs font-medium text-slate-500 uppercase tracking-wider">
       <div class="col-span-1">Cat.</div>
@@ -89,7 +89,7 @@
               ⋯
             </button>
             <div x-show="open" x-cloak
-                 class="absolute right-0 top-full mt-1 bg-ink-800 border border-white/10 rounded-xl shadow-2xl z-10 overflow-hidden w-36">
+                class="absolute right-0 top-full mt-1 bg-ink-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden w-36">
               <a href="{{ url_for('expenses.edit', id=expense.id) }}"
                  class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-white/5 transition-colors">
                 ✏️ Editar
