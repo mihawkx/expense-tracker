@@ -26,6 +26,20 @@ Aplicação web fullstack de controle financeiro desenvolvida para praticar Flas
 - Variáveis de ambiente e configuração para produção
 
 ---
+## Screenshots
+
+**Tela de login**
+<img width="1919" height="912" alt="image" src="https://github.com/user-attachments/assets/e2c4582d-ff7b-4c24-b03b-765de02bee0b" />
+
+**Dashboard**
+<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/e69ee572-4065-480c-a03a-515f584ee99d" />
+
+**Gastos**
+<img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/5ceac197-3156-481d-9572-693af428744f" />
+
+**Novo gasto**
+<img width="1919" height="914" alt="image" src="https://github.com/user-attachments/assets/fdefbf94-8228-4025-8c41-4bf1dc02582a" />
+
 
 ## ⚙️ Como rodar localmente
 
