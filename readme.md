@@ -1,12 +1,12 @@
-# 💸 Fintrack — Rastreador de Gastos Pessoais
+#  Fintrack — Rastreador de Gastos Pessoais
 
 Aplicação web fullstack de controle financeiro desenvolvida para praticar Flask, PostgreSQL e deploy em nuvem.
 
-**🔗 [Demo ao vivo](https://web-production-c52ebd.up.railway.app/)**
+** [Demo ao vivo](https://web-production-c52ebd.up.railway.app/)**
 
 ---
 
-## 🛠 Tecnologias utilizadas
+##  Tecnologias utilizadas
 
 - **Backend:** Python, Flask, SQLAlchemy, Flask-Login, Flask-Migrate
 - **Banco de dados:** PostgreSQL
@@ -15,7 +15,7 @@ Aplicação web fullstack de controle financeiro desenvolvida para praticar Flas
 
 ---
 
-## 💡 O que foi praticado
+##  O que foi praticado
 
 - Autenticação de usuários com hash de senha (Werkzeug)
 - Modelagem relacional com SQLAlchemy (User, Category, Expense)
@@ -41,7 +41,7 @@ Aplicação web fullstack de controle financeiro desenvolvida para praticar Flas
 <img width="1919" height="914" alt="image" src="https://github.com/user-attachments/assets/fdefbf94-8228-4025-8c41-4bf1dc02582a" />
 
 
-## ⚙️ Como rodar localmente
+##  Como rodar localmente
 
 ```bash
 git clone https://github.com/mihawkx/expense-tracker.git
