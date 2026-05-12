@@ -2,7 +2,6 @@
 
 Aplicação web fullstack de controle financeiro desenvolvida para praticar Flask, PostgreSQL e deploy em nuvem.
 
-**[Demo ao vivo](https://web-production-c52ebd.up.railway.app/)**
 
 ---
 
